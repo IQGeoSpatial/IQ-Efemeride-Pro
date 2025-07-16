@@ -1,0 +1,10 @@
+.env 
+*.exe
+*.dll
+dist/
+@env/
+build/
+__pycache__/
+config.ini
+main.spec
+generar_licencia_EFE.py
