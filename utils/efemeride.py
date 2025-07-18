@@ -33,7 +33,7 @@ FTP_CONFIG = {
     "IGS": {
         "server": "spiftp.esac.esa.int",
         "path_template": "/gnss/products/{gps_week}",
-        "interval": "05M"
+        "interval": "15M"
     }
 }
 
