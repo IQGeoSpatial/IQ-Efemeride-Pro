@@ -221,14 +221,18 @@ class EfemeridesDialog(QDialog):
 
         # Source Group
         source_group = QGroupBox("Fuente")
-        source_layout = QHBoxLayout(source_group)
+        source_layout = QGridLayout(source_group)
         self.rb_cod = QRadioButton("COD")
         self.rb_esa = QRadioButton("ESA")
         self.rb_igs = QRadioButton("IGS")
+        self.rb_gfz = QRadioButton("GFZ")
+        self.rb_whu = QRadioButton("WHU")
         self.rb_esa.setChecked(True) # ESA por defecto
-        source_layout.addWidget(self.rb_cod)
-        source_layout.addWidget(self.rb_esa)
-        source_layout.addWidget(self.rb_igs)
+        source_layout.addWidget(self.rb_cod, 0, 0)
+        source_layout.addWidget(self.rb_esa, 0, 1)
+        source_layout.addWidget(self.rb_igs, 0, 2)
+        source_layout.addWidget(self.rb_gfz, 1, 0)
+        source_layout.addWidget(self.rb_whu, 1, 1)
         right_layout.addWidget(source_group)
         # Ephemeris Type Group
         ephem_type_group = QGroupBox("Tipo de Efeméride")
@@ -382,6 +386,10 @@ class EfemeridesDialog(QDialog):
             source = "ESA"
         elif self.rb_igs.isChecked():
             source = "IGS"
+        elif self.rb_gfz.isChecked():
+            source = "GFZ"
+        elif self.rb_whu.isChecked():
+            source = "WHU"
         else:
             source = "ESA" # Fallback
 

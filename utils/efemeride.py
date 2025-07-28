@@ -34,6 +34,16 @@ FTP_CONFIG = {
         "server": "spiftp.esac.esa.int",
         "path_template": "/gnss/products/{gps_week}",
         "interval": "15M"
+    },
+    "GFZ": {
+        "server": "spiftp.esac.esa.int",
+        "path_template": "/gnss/products/{gps_week}",
+        "interval": "05M"
+    },
+    "WHU": {
+        "server": "spiftp.esac.esa.int",
+        "path_template": "/gnss/products/{gps_week}",
+        "interval": "05M"
     }
 }
 
