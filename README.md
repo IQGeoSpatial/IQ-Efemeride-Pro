@@ -1,12 +1,11 @@
+![IQ GeoSpatial Technology](Assets/Image/readme.png)
+
 # IQ GeoSpatial Pro - Efemérides GNSS
 
 Aplicación de escritorio para la descarga y gestión de efemérides GNSS, con activación de licencia y animaciones modernas.
 
 ## Características
-- Descarga de efemérides GNSS (COD, ESA, IGS)
-- Límite de 2 descargas gratuitas por equipo
-- Activación de licencia exclusiva para esta app
-- Solicitud de licencia por formulario integrado
+- Descarga de efemérides GNSS (COD, ESA, IGS, WHU, GFZ)
 - Animación visual de logo efemérides
 - Interfaz moderna y responsiva
 - Soporte y ayuda integrada
@@ -35,8 +34,8 @@ Aplicación de escritorio para la descarga y gestión de efemérides GNSS, con a
 ## Estructura principal
 - `main.py` - Lanzador principal
 - `GUI/` - Interfaces gráficas
-- `Models/` - Gestión de base de datos y licencias
-- `utils/` - Utilidades y lógica de licencia
+- `Models/` - Gestión de base de datos (No Aplica)
+- `utils/` - Utilidades
 - `Assets/` - Imágenes y recursos
 
 ---
