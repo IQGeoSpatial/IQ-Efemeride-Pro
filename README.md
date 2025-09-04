@@ -28,10 +28,6 @@ Aplicación de escritorio para la descarga y gestión de efemérides GNSS, con a
 - paramiko
 - colorama
 
-## Activación de Licencia
-- Al superar el límite de descargas gratuitas, solicita tu licencia desde la app.
-- Recibirás la clave por correo y podrás activarla en la ventana de licencia.
-
 ## Contacto y Soporte
 - WhatsApp: +51 900 102 921
 - Email: iqgeospatial@gmail.com

@@ -16,6 +16,7 @@ class LicenciaDB:
         self.conn = sqlite3.connect(self.db_path)
         self.create_table()
 
+    #Creamos la tabla si no existe
     def create_table(self):
         with self.conn:
             cursor = self.conn.cursor()
@@ -28,7 +29,6 @@ class LicenciaDB:
                     usos INTEGER DEFAULT 0
                 )
             """)
-            # Asegurarse de que solo haya una fila de licencia
             cursor.execute("SELECT COUNT(*) FROM licencia WHERE id = 1")
             if cursor.fetchone()[0] == 0:
                 cursor.execute("INSERT INTO licencia (id, usuario, licencia) VALUES (1, '', '')")

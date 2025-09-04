@@ -1,8 +1,7 @@
 .env 
-*.exe
 *.dll
 dist/
-@env/
+venv/
 build/
 __pycache__/
 config.ini

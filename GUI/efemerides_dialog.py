@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (
     QCalendarWidget, QGroupBox, QTextEdit, QFileDialog, QMessageBox,
     QProgressBar, QWidget, QGridLayout
 )
-from PyQt5.QtCore import Qt, QDate, QThread, pyqtSignal
+from PyQt5.QtCore import Qt, QDate, QThread, pyqtSignal, QTimer, QSize
 from PyQt5.QtGui import QIcon, QPixmap, QTransform
 
 from utils.resource_path import resource_path
@@ -23,7 +23,7 @@ def __init__(self, parent=None):
 
 class FtpWorker(QThread):
     """
-    Worker thread to handle the FTP download process without freezing the GUI.
+    Hilo de trabajo para manejar el proceso de descarga FTP sin congelar la GUI.
     """
     log_message = pyqtSignal(str)
     progress_update = pyqtSignal(int)
@@ -38,7 +38,7 @@ class FtpWorker(QThread):
 
     def run(self):
         """
-        Connects to the ESA FTP server and downloads the daily broadcast ephemeris file.
+        Se conecta al servidor FTP de la ESA y descarga el archivo de efemérides de transmisión diaria.
         """
         try:
             config = FTP_CONFIG.get(self.source)
@@ -111,7 +111,6 @@ class EfemeridesDialog(QDialog):
         remote_dir = "/gnss/products/2368"
         try:
             self.update_log(f"[SFTP] Conectando a {host}:{port} ...")
-            import paramiko
             transport = paramiko.Transport((host, port))
             transport.connect(username=username, password=password)
             sftp = paramiko.SFTPClient.from_transport(transport)
@@ -124,6 +123,7 @@ class EfemeridesDialog(QDialog):
             transport.close()
         except Exception as e:
             self.update_log(f"[SFTP][ERROR] {e}")
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.worker = None
@@ -134,12 +134,10 @@ class EfemeridesDialog(QDialog):
         self.setWindowTitle("Descargar Efemérides")
         self.setObjectName("EfemeridesDialog")
         logo_path = resource_path(os.path.join("Assets", "Image", "efemeride.png"))
-        # print("[DEBUG] Logo path:", logo_path)
-        # print("[DEBUG] Existe logo:", os.path.exists(logo_path))
+
         if os.path.exists(logo_path):
             self.setWindowIcon(QIcon(logo_path))
         else:
-            # print("[DEBUG] No se encontró el logo en la ruta esperada.")
             pass
         self.setMinimumSize(800, 500)
 
@@ -147,11 +145,10 @@ class EfemeridesDialog(QDialog):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
-        # --- Left Panel (Calendar) ---
+        # --- Panel izquierdo (Calendario) ---
         self.calendar = QCalendarWidget()
         self.calendar.setVerticalHeaderFormat(QCalendarWidget.NoVerticalHeader)
         self.calendar.setSelectedDate(QDate.currentDate())
-        # Cambiar color del mes y año a negro
         self.calendar.setStyleSheet("""
             QCalendarWidget QToolButton {
                 color: #222;
@@ -161,7 +158,7 @@ class EfemeridesDialog(QDialog):
         """)
         main_layout.addWidget(self.calendar, 1)
 
-        # --- Right Panel (Controls) ---
+        # --- Panel derecho (controles) ---
         right_panel = QWidget()
         right_panel.setObjectName("RightPanel")
         right_layout = QVBoxLayout(right_panel)
@@ -172,24 +169,6 @@ class EfemeridesDialog(QDialog):
         licencia_layout = QHBoxLayout()
         licencia_layout.setContentsMargins(0, 0, 0, 0)
         licencia_layout.setAlignment(Qt.AlignRight)
-        self.btn_licencia = QPushButton()
-        icono_path = resource_path(os.path.join("Assets", "Image", "licencia.png"))
-        if os.path.exists(icono_path):
-            self.btn_licencia.setIcon(QIcon(icono_path))
-        from PyQt5.QtCore import QSize
-        self.btn_licencia.setIconSize(QSize(28, 28))
-        self.btn_licencia.setFixedSize(38, 38)
-        self.btn_licencia.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: none;
-                border-radius: 19px;
-            }
-            QPushButton:hover {
-                background: #f0f0f0;
-            }
-        """)
-        self.btn_licencia.setToolTip("Licencia")
 
         # Botón de ayuda
         self.btn_ayuda = QPushButton()
@@ -208,18 +187,15 @@ class EfemeridesDialog(QDialog):
         """)
         self.btn_ayuda.setToolTip("Ayuda")
 
-        licencia_layout.addWidget(self.btn_licencia)
         licencia_layout.addWidget(self.btn_ayuda)
         right_layout.addLayout(licencia_layout)
 
-        # Title
         title_label = QLabel("Descarga de Efemérides GNSS")
         title_label.setObjectName("Titulo")
         title_label.setAlignment(Qt.AlignCenter)
         title_label.setStyleSheet("font-size: 20px; font-weight: bold; color: #2c3e50; margin-bottom: 10px;")
         right_layout.addWidget(title_label)
 
-        # Source Group
         source_group = QGroupBox("Fuente")
         source_layout = QGridLayout(source_group)
         self.rb_cod = QRadioButton("COD")
@@ -234,7 +210,7 @@ class EfemeridesDialog(QDialog):
         source_layout.addWidget(self.rb_gfz, 1, 0)
         source_layout.addWidget(self.rb_whu, 1, 1)
         right_layout.addWidget(source_group)
-        # Ephemeris Type Group
+
         ephem_type_group = QGroupBox("Tipo de Efeméride")
         ephem_type_layout = QHBoxLayout(ephem_type_group)
         self.rb_ultrarapid = QRadioButton("Ultra-rápido")
@@ -246,7 +222,6 @@ class EfemeridesDialog(QDialog):
         ephem_type_layout.addWidget(self.rb_final)
         right_layout.addWidget(ephem_type_group)
 
-        # Información de Fecha (Julian Day centrado, segunda fila Day of Year y GPS Week, tercera fila GPS Week Number centrado)
         font_bold = self.font()
         font_bold.setBold(True)
         fecha_grid = QGridLayout()
@@ -281,7 +256,6 @@ class EfemeridesDialog(QDialog):
         fecha_grid.setColumnStretch(3, 1)
 
         # Segunda fila: Day of Year y GPS Week (toda la fila centrada)
-        # Usar una sola celda que abarque todas las columnas y un layout horizontal centrado
         fila2_widget = QWidget()
         fila2_layout = QHBoxLayout(fila2_widget)
         fila2_layout.setContentsMargins(0, 0, 0, 0)
@@ -301,8 +275,6 @@ class EfemeridesDialog(QDialog):
 
         right_layout.addLayout(fecha_grid)
 
-
-        from PyQt5.QtCore import QTimer
         # Crear primero los widgets que se usan en otros métodos
         self.download_btn = QPushButton("Descargar Efemérides")
         self.download_btn.setCursor(Qt.PointingHandCursor)
@@ -316,6 +288,7 @@ class EfemeridesDialog(QDialog):
         self._efem_pixmap = QPixmap(img_path)
         self._efem_angle = 0
         self.efem_img_label.setPixmap(self._efem_pixmap.scaled(120, 120, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        
         # Timer para animar la rotación
         self._efem_timer = QTimer(self)
         self._efem_timer.timeout.connect(self._rotate_efem_img)
@@ -337,7 +310,6 @@ class EfemeridesDialog(QDialog):
     def connect_signals(self):
         self.download_btn.clicked.connect(self.start_download)
         self.calendar.selectionChanged.connect(self.update_date_info)
-        self.btn_licencia.clicked.connect(self.abrir_licencia_dialog)
         self.btn_ayuda.clicked.connect(self.mostrar_ayuda)
 
     def mostrar_ayuda(self):
@@ -358,21 +330,8 @@ class EfemeridesDialog(QDialog):
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec_()
 
-    def abrir_licencia_dialog(self):
-        try:
-            from GUI.licencia_dialog import LicenciaDialog
-            dlg = LicenciaDialog(self)
-            dlg.exec_()
-        except ImportError:
-            QMessageBox.warning(self, "Licencia", "El módulo de licencia no está disponible.")
-
 
     def start_download(self):
-        from utils.licencia_utils import puede_usar_app, registrar_uso
-        if not puede_usar_app():
-            QMessageBox.critical(self, "Límite alcanzado", "Ya has realizado el máximo de 2 descargas gratuitas. Por favor, activa tu licencia para continuar usando la aplicación.")
-            return
-
         self.progress_bar.setValue(0)
 
         save_path = QFileDialog.getExistingDirectory(self, "Seleccionar Carpeta de Destino", os.path.expanduser("~\\Desktop"))
@@ -391,7 +350,7 @@ class EfemeridesDialog(QDialog):
         elif self.rb_whu.isChecked():
             source = "WHU"
         else:
-            source = "ESA" # Fallback
+            source = "ESA"
 
         # Determinar el tipo de efeméride seleccionado
         if self.rb_ultrarapid.isChecked():
@@ -405,13 +364,10 @@ class EfemeridesDialog(QDialog):
 
         selected_date = self.calendar.selectedDate().toPyDate()
 
-        # Registrar uso solo si no hay licencia
-        registrar_uso()
-
         self.download_btn.setEnabled(False)
         self.progress_bar.setValue(0)
         self.show_status_message("Descargando efemérides... Por favor espere.")
-        # Start the FTP worker thread
+        # Iniciar el hilo de trabajo de FTP
         self.worker = FtpWorker(selected_date, save_path, ephem_type, source)
         self.worker.progress_update.connect(self.update_progress)
         self.worker.download_finished.connect(self.download_finished)
@@ -421,9 +377,6 @@ class EfemeridesDialog(QDialog):
     def show_status_message(self, message):
         # No mostrar texto en la barra de progreso, solo la barra visual
         self.progress_bar.setTextVisible(False)
-
-    # def update_log(self, message):
-    #     pass  # Eliminado: ya no hay área de log
 
     def update_progress(self, value):
         self.progress_bar.setValue(value)
@@ -468,7 +421,7 @@ class EfemeridesDialog(QDialog):
 
     def closeEvent(self, event):
         """
-        Ensure the worker thread is terminated if the dialog is closed during download.
+        Asegúrese de que el hilo de trabajo finalice si el cuadro de diálogo se cierra durante la descarga.
         """
         if self.worker and self.worker.isRunning():
             self.worker.terminate()

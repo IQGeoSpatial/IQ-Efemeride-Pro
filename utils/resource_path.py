@@ -17,7 +17,6 @@ def resource_path(relative_path):
                 break   
             parent = os.path.dirname(current)
             if parent == current:
-                # Llegamos a la raíz del disco y no encontramos main.py
                 base_path = os.path.abspath(os.path.dirname(sys.argv[0]))
                 break
             current = parent

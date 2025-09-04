@@ -12,8 +12,7 @@ class SplashScreen(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-        self.setFixedSize(700, 480) # Más ancho
-        # Fondo con la imagen portada.jpeg
+        self.setFixedSize(700, 480)
         portada_path = resource_path(os.path.join("Assets", "Image", "portada.jpeg"))
         self._portada_pixmap = QPixmap(portada_path)
         self.setStyleSheet("")
@@ -34,7 +33,7 @@ class SplashScreen(QWidget):
         self.progress_bar.setTextVisible(True)
         self.progress_bar.setRange(0, 100)
         layout.addWidget(self.progress_bar)
-        layout.addStretch(1) # Añade menos espacio flexible en la parte inferior
+        layout.addStretch(1) 
 
         self.progress_value = 0
         self.timer = QTimer(self)
@@ -67,7 +66,6 @@ class SplashScreen(QWidget):
         """
         self.show()
         self.timer.timeout.connect(lambda: self.update_progress(callback))
-        # El intervalo del timer define la "suavidad" de la barra
         self.timer.start(duration // 100)
 
     def update_progress(self, callback):
