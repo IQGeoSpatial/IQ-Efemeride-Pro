@@ -1,4 +1,6 @@
-![IQ GeoSpatial Technology](Assets/Image/readme.png)
+<p align="center">
+  <img src="Assets/Image/readme.png" alt="IQ GeoSpatial Technology" width="700">
+</p>
 
 # IQ GeoSpatial Pro - Efemérides GNSS
 
