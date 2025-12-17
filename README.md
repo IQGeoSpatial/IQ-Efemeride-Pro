@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Assets/Image/readme.png" alt="IQ GeoSpatial Technology" width="700">
+  <img src="Assets/Image/portada.png" alt="IQ GeoSpatial Technology" width="700">
 </p>
 
 # IQ GeoSpatial Pro - Efemérides GNSS
@@ -20,7 +20,7 @@ Aplicación de escritorio para la descarga y gestión de efemérides GNSS, con a
    ```
 3. Ejecuta la app:
    ```bash
-   python main.py
+   python3 -m main
    ```
 
 ## Requisitos
@@ -40,5 +40,11 @@ Aplicación de escritorio para la descarga y gestión de efemérides GNSS, con a
 - `utils/` - Utilidades
 - `Assets/` - Imágenes y recursos
 
+## License
+
+IQ GeoSpatial Pro is licensed under the Apache License 2.0.
+You may obtain a copy of the full license in the `LICENSE` file included in this repository, or at:
+http://www.apache.org/licenses/LICENSE-2.0
+
 ---
-© 2025 IQ GeoSpatial Technology
+© 2025 IQ GeoSpatial Technology. All rights reserved.
